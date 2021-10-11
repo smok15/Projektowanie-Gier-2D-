@@ -24,25 +24,32 @@
 		var grd = circle.createLinearGradient(GradientA+colorChange, canvasHeight/2, GradientB+colorChange, canvasHeight/2);
 		grd.addColorStop(0, "#203dc3");
 		grd.addColorStop(1, "#6dc128");
+		
 		circle.clearRect(0,0, 800,600);
 		circle.beginPath();
 		circle.arc(canvasWidth/2,200+bounceChange,radius,0,Math.PI*2,true);
 		circle.closePath();
 		circle.fillStyle=grd;
 		circle.fill();
-		//color change
+		
+		tone();
+		bounce();
+		
+	}
+	//color change
+	function tone(){
 		if(colorChange==400)colorFlag=false;
 		if(colorChange==0)colorFlag=true;
 		if(colorFlag==true)colorChange+=4;
 		else colorChange-=4;
-		//bounce
+	}
+	//bounce
+	function bounce(){
 		if(bounceChange==300)bounceFlag=false;
 		if(bounceChange==0)bounceFlag=true;
 		if(bounceFlag==true)bounceChange+=3;
 		else bounceChange-=3;
-		
 	}
-	
 	draw();
 	setInterval(draw,interval);
 

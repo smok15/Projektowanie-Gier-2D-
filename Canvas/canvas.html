@@ -1,15 +1,57 @@
 <!DOCTYPE html>
 <html>
 	<body>
-	<canvas id="myCanvas" width="800" height="600"></canvas>
+	  <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+	  </canvas>
 	</body>
 	
 	<script>
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
-	ctx.beginPath();
-	ctx.arc(400, 300, 200, 0, 2 * Math.PI);
-	ctx.stroke();
-	</script>
+	var circle= myCanvas.getContext('2d');
+	var colorFlag=true;
+	var colorChange=0;
+	var interval =10;
+	var canvasWidth= 800;
+	var canvasHeight= 600;
+	var radius = 100;
+	var GradientA = (canvasWidth/2)-75 - 2*radius;
+	var GradientB = (canvasWidth/2)+75 - 2*radius;
+	var bounceFlag = true;
+	var bounceChange = 0;
 	
+	//drawing cirle
+	function draw()
+	{
+		var grd = circle.createLinearGradient(GradientA+colorChange, canvasHeight/2, GradientB+colorChange, canvasHeight/2);
+		grd.addColorStop(0, "#203dc3");
+		grd.addColorStop(1, "#6dc128");
+		
+		circle.clearRect(0,0, 800,600);
+		circle.beginPath();
+		circle.arc(canvasWidth/2,200+bounceChange,radius,0,Math.PI*2,true);
+		circle.closePath();
+		circle.fillStyle=grd;
+		circle.fill();
+		
+		tone();
+		bounce();
+		
+	}
+	//color change
+	function tone(){
+		if(colorChange==400)colorFlag=false;
+		if(colorChange==0)colorFlag=true;
+		if(colorFlag==true)colorChange+=4;
+		else colorChange-=4;
+	}
+	//bounce
+	function bounce(){
+		if(bounceChange==300)bounceFlag=false;
+		if(bounceChange==0)bounceFlag=true;
+		if(bounceFlag==true)bounceChange+=3;
+		else bounceChange-=3;
+	}
+	draw();
+	setInterval(draw,interval);
+
+	</script>
 </html>

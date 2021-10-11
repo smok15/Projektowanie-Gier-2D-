@@ -6,25 +6,28 @@
 	</body>
 	
 	<script>
-	var circle;
+	var circle= myCanvas.getContext('2d');;
 	var colorFlag=0;
-	
+	var interval =10;
+	var canvasWidth= 800;
+	var canvasHeight= 600;
 	//drawing cirle
 	function draw()
 	{
+		var grd = circle.createLinearGradient(0+colorFlag, canvasHeight/2, 100+colorFlag, canvasHeight/2);
+		grd.addColorStop(0, "blue");
+		grd.addColorStop(1, "green");
 		circle.clearRect(0,0, 800,600);
 		circle.beginPath();
 		circle.arc(400,300,50,0,Math.PI*2,true);
 		circle.closePath();
-		if ((colorFlag%2)==0){circle.fillStyle="blue";}
-		else {circle.fillStyle="green";}
+		circle.fillStyle=grd;
 		circle.fill();
 		colorFlag+=1;
 	}
 	
-	circle= myCanvas.getContext('2d');
 	draw();
-	setInterval(draw,1000);
+	setInterval(draw,interval);
 
 	</script>
 </html>

@@ -6,24 +6,32 @@
 	</body>
 	
 	<script>
-	var circle= myCanvas.getContext('2d');;
-	var colorFlag=0;
+	var circle= myCanvas.getContext('2d');
+	var colorFlag=true;
+	var colorChange=0;
 	var interval =10;
 	var canvasWidth= 800;
 	var canvasHeight= 600;
+	var radius = 100;
+	var GradientA = (canvasWidth/2)-75 - 2*radius;
+	var GradientB = (canvasWidth/2)+75 - 2*radius;
+	
 	//drawing cirle
 	function draw()
 	{
-		var grd = circle.createLinearGradient(0+colorFlag, canvasHeight/2, 100+colorFlag, canvasHeight/2);
+		var grd = circle.createLinearGradient(GradientA+colorChange, canvasHeight/2, GradientB+colorChange, canvasHeight/2);
 		grd.addColorStop(0, "blue");
 		grd.addColorStop(1, "green");
 		circle.clearRect(0,0, 800,600);
 		circle.beginPath();
-		circle.arc(400,300,50,0,Math.PI*2,true);
+		circle.arc(canvasWidth/2,300,radius,0,Math.PI*2,true);
 		circle.closePath();
 		circle.fillStyle=grd;
 		circle.fill();
-		colorFlag+=1;
+		if(colorChange==400)colorFlag=false;
+		if(colorChange==0)colorFlag=true;
+		if(colorFlag==true)colorChange+=4;
+		else colorChange-=4;
 	}
 	
 	draw();

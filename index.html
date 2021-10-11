@@ -1,33 +1,30 @@
 <!DOCTYPE html>
 <html>
-	<body onLoad="init();">
+	<body>
 	  <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
 	  </canvas>
 	</body>
 	
 	<script>
 	var circle;
-	var x=400;
-	var y=300;
-	var i=0;
-
-	function init()
-	{
-	  circle= myCanvas.getContext('2d');
-	  setInterval(draw,1000);
-	}
-
+	var colorFlag=0;
+	
+	//drawing cirle
 	function draw()
 	{
 		circle.clearRect(0,0, 800,600);
 		circle.beginPath();
 		circle.arc(400,300,50,0,Math.PI*2,true);
 		circle.closePath();
-		if ((i%2)==0){circle.fillStyle="blue";}
+		if ((colorFlag%2)==0){circle.fillStyle="blue";}
 		else {circle.fillStyle="green";}
 		circle.fill();
-		i+=1;
+		colorFlag+=1;
 	}
+	
+	circle= myCanvas.getContext('2d');
+	draw();
+	setInterval(draw,1000);
 
 	</script>
 </html>

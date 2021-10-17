@@ -11,18 +11,42 @@
 	var canvasWidth= 800;
 	var canvasHeight= 600;
 	var rectSize = 100;
+	var flagL = false;
+	var flagR = false;
+	var change = 0;
 	
-	//drawing cirle
+	myCanvas.addEventListener('keydown', function(event) => {
+		if(event.keyCode==37){
+			flagL==true;
+		}
+		else if(event.keyCode==39){
+			flagR==true;
+		}
+	});
+	
 	function draw()
 	{	
 		ctx.clearRect(0,0, 800,600);
 		ctx.beginPath();
-		ctx.rect(canvasWidth/2,canvasHeight-(rectSize/2),50,50);
+		ctx.rect(canvasWidth/2,canvasHeight-(rectSize/2)+ change,50,50);
 		ctx.closePath();
 		ctx.fillStyle="red";
 		ctx.fill();	
+		move();
 	}
-
+	
+	function move(){
+		if (flagR==true){
+			change = 1;
+		}
+		else if (flagL == true){
+			change = -1;
+		}
+		else{
+			change = 0;
+		}
+	}
+	
 	draw();
 	setInterval(draw,interval);
 

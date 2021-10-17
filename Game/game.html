@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<body>
+	  <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+	  </canvas>
+	</body>
+	
+	<script>
+	var ctx= myCanvas.getContext('2d');
+	var interval =10;
+	var canvasWidth= 800;
+	var canvasHeight= 600;
+	var rectSize = 100;
+	
+	//drawing cirle
+	function draw()
+	{	
+		ctx.clearRect(0,0, 800,600);
+		ctx.beginPath();
+		ctx.rect(canvasWidth/2,canvasHeight-(rectSize/2),50,50);
+		ctx.closePath();
+		ctx.fillStyle="red";
+		ctx.fill();	
+	}
+
+	draw();
+	setInterval(draw,interval);
+
+	</script>
+</html>

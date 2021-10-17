@@ -15,14 +15,20 @@
 	var flagR = false;
 	var change = 0;
 	
-	myCanvas.addEventListener('keydown', function(event) => {
-		if(event.keyCode==37){
+	myCanvas.addEventListener('keydown', checkKeyPress,false);
+	
+	function checkKeyPress(key){
+		if(key.keyCode==37){
 			flagL==true;
 		}
-		else if(event.keyCode==39){
+		else if(key.keyCode==39){
 			flagR==true;
 		}
-	});
+		else {
+			flagL = false;
+			flagR = false;
+		}
+	}
 	
 	function draw()
 	{	

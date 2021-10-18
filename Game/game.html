@@ -10,15 +10,15 @@
 	var ctx= c.getContext('2d');
 	var canvasWidth= 800;
 	var canvasHeight= 600;
-	var boundaryL=-400;
-	var boundaryR=350;
-	var rectSize = 100;
+	var boundaryL=-375;
+	var boundaryR=375;
+	var rectSize = 50;
 	var halfRect = rectSize/2;
 	var left = -5;
 	var right = 5;
 	var change = 0;
 	
-	rect = ctx.rect((canvasWidth/2),canvasHeight-halfRect,halfRect,halfRect);
+	rect = ctx.rect((canvasWidth/2)-halfRect,canvasHeight-rectSize,rectSize,rectSize);
 	ctx.fillStyle="red";
 	ctx.fill();
 	ctx.stroke();
@@ -31,6 +31,9 @@
             case 39:
 				drawR();
                 break;
+			case 32:
+                bullet();
+                break;
         }
     });
 	
@@ -40,7 +43,7 @@
 			ctx.clearRect(0,0, 800,600);
 			ctx.beginPath();
 			change -= 5;
-			ctx.rect((canvasWidth/2)+ change,canvasHeight-halfRect,halfRect,halfRect);
+			ctx.rect((canvasWidth/2)-halfRect+ change,canvasHeight-rectSize,rectSize,rectSize);
 			ctx.fillStyle="red";
 			ctx.fill();
 			ctx.stroke();			
@@ -56,7 +59,7 @@
 			ctx.clearRect(0,0, 800,600);
 			ctx.beginPath();
 			change += 5;
-			ctx.rect((canvasWidth/2)+ change,canvasHeight-halfRect,halfRect,halfRect);
+			ctx.rect((canvasWidth/2)-halfRect+ change,canvasHeight-rectSize,rectSize,rectSize);
 			ctx.fillStyle="red";
 			ctx.fill();
 			ctx.stroke();			
@@ -66,6 +69,20 @@
         }
 	}
 
-
+	function bullet(x)
+	{	
+		if(change<boundaryR){
+			ctx.clearRect(0,0, 800,600);
+			ctx.beginPath();
+			ctx.rect((canvasWidth/2)-halfRect+ change,canvasHeight-rectSize,rectSize,rectSize);
+			ctx.arc((canvasWidth/2)+ change,canvasHeight-rectSize,10,0,Math.PI*2,true);
+			ctx.fillStyle="red";
+			ctx.fill();
+			ctx.stroke();			
+			ctx.closePath();
+		}else {
+            return;
+        }
+	}
 	</script>
 </html>

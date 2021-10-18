@@ -8,17 +8,17 @@
 	<script>
 	var c = document.getElementById("myCanvas");
 	var ctx= c.getContext('2d');
-	var interval =10;
 	var canvasWidth= 800;
 	var canvasHeight= 600;
 	var boundaryL=-400;
-	var boundaryR=400;
+	var boundaryR=350;
 	var rectSize = 100;
-	var flagL = false;
-	var flagR = false;
+	var halfRect = rectSize/2;
+	var left = -5;
+	var right = 5;
 	var change = 0;
 	
-	rect = ctx.rect(canvasWidth/2,canvasHeight-(rectSize/2),rectSize/2,rectSize/2);
+	rect = ctx.rect((canvasWidth/2),canvasHeight-halfRect,halfRect,halfRect);
 	ctx.fillStyle="red";
 	ctx.fill();
 	ctx.stroke();
@@ -26,29 +26,45 @@
 	document.addEventListener('keydown', function (e) {
         switch (e.keyCode) {
             case 37:
-                draw(5);
+                drawL();
                 break;
             case 39:
+				drawR();
                 break;
         }
     });
 	
-	function draw(x)
+	function drawL(x)
 	{	
-		if(change>boundaryL && change<boundaryR){
+		if(change>boundaryL){
 			ctx.clearRect(0,0, 800,600);
 			ctx.beginPath();
-			change -= x;
-			ctx.rect((canvasWidth/2)+ change,canvasHeight-(rectSize/2),rectSize/2,rectSize/2);
+			change -= 5;
+			ctx.rect((canvasWidth/2)+ change,canvasHeight-halfRect,halfRect,halfRect);
 			ctx.fillStyle="red";
 			ctx.fill();
 			ctx.stroke();			
 			ctx.closePath();
-		}else{
-			return;
-		}
+		}else {
+            return;
+        }
 	}
 
+	function drawR(x)
+	{	
+		if(change<boundaryR){
+			ctx.clearRect(0,0, 800,600);
+			ctx.beginPath();
+			change += 5;
+			ctx.rect((canvasWidth/2)+ change,canvasHeight-halfRect,halfRect,halfRect);
+			ctx.fillStyle="red";
+			ctx.fill();
+			ctx.stroke();			
+			ctx.closePath();
+		}else {
+            return;
+        }
+	}
 
 
 	</script>

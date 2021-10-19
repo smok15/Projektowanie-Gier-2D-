@@ -16,7 +16,10 @@
 	var halfRect = rectSize/2;
 	var left = -5;
 	var right = 5;
-	var change = 0;
+	var changex = 0;
+	var changey = 0;
+	var radius = 10;
+	var interval =10;
 	
 	rect = ctx.rect((canvasWidth/2)-halfRect,canvasHeight-rectSize,rectSize,rectSize);
 	ctx.fillStyle="red";
@@ -32,18 +35,18 @@
 				drawR();
                 break;
 			case 32:
-                bullet();
+                setInterval(bullet,interval);
                 break;
         }
     });
 	
 	function drawL(x)
 	{	
-		if(change>boundaryL){
-			ctx.clearRect(0,0, 800,600);
+		if(changex>boundaryL){
+			ctx.clearRect(0,549, 800,600);
 			ctx.beginPath();
-			change -= 5;
-			ctx.rect((canvasWidth/2)-halfRect+ change,canvasHeight-rectSize,rectSize,rectSize);
+			changex -= 5;
+			ctx.rect((canvasWidth/2)-halfRect+ changex,canvasHeight-rectSize,rectSize,rectSize);
 			ctx.fillStyle="red";
 			ctx.fill();
 			ctx.stroke();			
@@ -55,11 +58,11 @@
 
 	function drawR(x)
 	{	
-		if(change<boundaryR){
-			ctx.clearRect(0,0, 800,600);
+		if(changex<boundaryR){
+			ctx.clearRect(0,549, 800,600);
 			ctx.beginPath();
-			change += 5;
-			ctx.rect((canvasWidth/2)-halfRect+ change,canvasHeight-rectSize,rectSize,rectSize);
+			changex += 5;
+			ctx.rect((canvasWidth/2)-halfRect+ changex,canvasHeight-rectSize,rectSize,rectSize);
 			ctx.fillStyle="red";
 			ctx.fill();
 			ctx.stroke();			
@@ -69,20 +72,16 @@
         }
 	}
 
-	function bullet(x)
-	{	
-		if(change<boundaryR){
-			ctx.clearRect(0,0, 800,600);
-			ctx.beginPath();
-			ctx.rect((canvasWidth/2)-halfRect+ change,canvasHeight-rectSize,rectSize,rectSize);
-			ctx.arc((canvasWidth/2)+ change,canvasHeight-rectSize,10,0,Math.PI*2,true);
-			ctx.fillStyle="red";
-			ctx.fill();
-			ctx.stroke();			
-			ctx.closePath();
-		}else {
-            return;
-        }
+	function bullet()
+	{
+		ctx.beginPath();
+		ctx.arc((canvasWidth/2)+changex,canvasHeight-rectSize-radius-1-changey,radius,0,Math.PI*2,true);
+		ctx.fillStyle="red";
+		ctx.fill();
+		changey+=2;
+		ctx.stroke();			
+		ctx.closePath();
+		if(changey > 550) return;
 	}
 	</script>
 </html>

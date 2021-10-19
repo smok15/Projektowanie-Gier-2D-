@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<body>
+	  <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+	  </canvas>
+	</body>
+	
+	<script>
+	var c = document.getElementById("myCanvas");
+	var ctx= c.getContext('2d');
+	
+	var rectWidth = 50;
+	var rectHeight = 30;
+	
+	var rectX = (c.width-rectWidth)/2;
+	var rectY = c.height-rectHeight;
+	
+	function drawRect(){
+		ctx.beginPath();
+		ctx.rect(rectX,rectY,rectWidth,rectHeight);
+		ctx.fillStyle="red";
+		ctx.fill();
+		ctx.closePath();
+	}
+	
+	document.addEventListener('keydown', function (e) {
+        switch (e.keyCode) {
+            case 37:
+				drawRect();
+                break;
+            case 39:
+
+                break;
+			case 32:
+
+                break;
+        }
+    });
+	
+	drawRect();
+	
+	</script>
+</html>

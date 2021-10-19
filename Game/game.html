@@ -20,6 +20,10 @@
 	var changey = 0;
 	var radius = 10;
 	var interval =10;
+	var rectX;
+	var rectY;
+	var bulletX;
+	var bulletY;
 	
 	rect = ctx.rect((canvasWidth/2)-halfRect,canvasHeight-rectSize,rectSize,rectSize);
 	ctx.fillStyle="red";
@@ -46,7 +50,9 @@
 			ctx.clearRect(0,549, 800,600);
 			ctx.beginPath();
 			changex -= 5;
-			ctx.rect((canvasWidth/2)-halfRect+ changex,canvasHeight-rectSize,rectSize,rectSize);
+			rectX = (canvasWidth/2)-halfRect+ changex;
+			rectY =canvasHeight-rectSize;
+			ctx.rect(rectX,rectY,rectSize,rectSize);
 			ctx.fillStyle="red";
 			ctx.fill();
 			ctx.stroke();			
@@ -62,7 +68,9 @@
 			ctx.clearRect(0,549, 800,600);
 			ctx.beginPath();
 			changex += 5;
-			ctx.rect((canvasWidth/2)-halfRect+ changex,canvasHeight-rectSize,rectSize,rectSize);
+			rectX = (canvasWidth/2)-halfRect+ changex;
+			rectY =canvasHeight-rectSize;
+			ctx.rect(rectX,rectY,rectSize,rectSize);
 			ctx.fillStyle="red";
 			ctx.fill();
 			ctx.stroke();			
@@ -74,14 +82,17 @@
 
 	function bullet()
 	{
+		bulletX=(canvasWidth/2)+changex;
+		bulletY=canvasHeight-rectSize-radius-1-changey;
+		ctx.clearRect(bulletX-radius-1,bulletY-radius,bulletX+radius,bulletY+radius);
 		ctx.beginPath();
-		ctx.arc((canvasWidth/2)+changex,canvasHeight-rectSize-radius-1-changey,radius,0,Math.PI*2,true);
+		ctx.arc(bulletX,bulletY,radius,0,Math.PI*2,true);
 		ctx.fillStyle="red";
 		ctx.fill();
 		changey+=2;
 		ctx.stroke();			
 		ctx.closePath();
-		if(changey > 550) return;
+		if(changey > 600) return;
 	}
 	</script>
 </html>

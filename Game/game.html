@@ -9,8 +9,8 @@
 	var c = document.getElementById("myCanvas");
 	var ctx= c.getContext('2d');
 	
-	var rectWidth = 50;
-	var rectHeight = 30;
+	var rectWidth = 60;
+	var rectHeight = 20;
 
 	var rectX = (c.width-rectWidth)/2;
 	var rectY = c.height-rectHeight;
@@ -31,7 +31,7 @@
 	function drawRect(){
 		ctx.beginPath();
 		ctx.rect(rectX,rectY,rectWidth,rectHeight);
-		ctx.fillStyle="red";
+		ctx.fillStyle="black";
 		ctx.fill();
 		ctx.closePath();
 	}
@@ -47,6 +47,7 @@
 	function draw(){
 			ctx.clearRect(0,0, 800,600);
 			bulletX = rectX+(rectWidth/2);
+			drawScore();
 			drawTarget();
 			drawRect();
 	}
@@ -54,6 +55,7 @@
 	function bulletLogic(){
 		if(bulletY>0 && shootFlag && collision()==false){
 			ctx.clearRect(0,0, 800,600);
+			drawScore();
 			drawRect();
 			drawTarget();
 			drawBullet();
@@ -90,17 +92,21 @@
 	function collision(){
 		distance = parseInt( Math.sqrt(((targetX - bulletX) * (targetX - bulletX)) + ((targetY - bulletY) *(targetY - bulletY))));
 		if (distance<radius+targetR){
-			ctx.clearRect(0,0,800,200);
+			ctx.clearRect(0,0,800,300);
 			counter+=1;
 			generateTarget();
-			console.log(counter);
 			return true;
 		}else {
-			console.log(counter);
 			return false;
 		}
 	}
 	
+	function drawScore() {
+    ctx.font = "24px Arial";
+    ctx.fillStyle = "black";
+    ctx.fillText("Wynik: " + counter, 20, c.height - 40);
+	}
+
 	document.addEventListener('keydown', function (e) {
         switch (e.keyCode) {
             case 37:

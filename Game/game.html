@@ -8,91 +8,75 @@
 	<script>
 	var c = document.getElementById("myCanvas");
 	var ctx= c.getContext('2d');
-	var canvasWidth= 800;
-	var canvasHeight= 600;
-	var boundaryL=-375;
-	var boundaryR=375;
-	var rectSize = 50;
-	var halfRect = rectSize/2;
-	var left = -5;
-	var right = 5;
-	var changex = 0;
-	var changey = 0;
-	var radius = 10;
-	var interval =10;
-	var rectX;
-	var rectY;
-	var bulletX;
-	var bulletY;
 	
-	rect = ctx.rect((canvasWidth/2)-halfRect,canvasHeight-rectSize,rectSize,rectSize);
-	ctx.fillStyle="red";
-	ctx.fill();
-	ctx.stroke();
+	var rectWidth = 50;
+	var rectHeight = 30;
+
+	
+	var rectX = (c.width-rectWidth)/2;
+	var rectY = c.height-rectHeight;
+	
+	var radius = 10;
+	var bulletX = rectX+(rectWidth/2);
+	var bulletY = rectY-radius;
+	var vel =8;
+	
+	var leftFlag=false;
+	var rightFlag=false;
+	var shootFlag=false;
+	
+	
+	function drawRect(){
+		ctx.beginPath();
+		ctx.rect(rectX,rectY,rectWidth,rectHeight);
+		ctx.fillStyle="red";
+		ctx.fill();
+		ctx.closePath();
+	}
+	
+	function drawBullet(){
+		ctx.beginPath();
+		ctx.arc(rectX+(rectWidth/2),bulletY,radius,0,Math.PI*2,true);
+		ctx.fillStyle="red";
+		ctx.fill();
+		ctx.closePath();
+	}
+	
+	function draw(){
+			ctx.clearRect(0,0, 800,600);
+			drawRect();
+	}
+	
+	function bulletLogic(){
+		if(bulletY>0 && shootFlag){
+			ctx.clearRect(0,0, 800,600);
+			drawRect();
+			drawBullet();
+			bulletY-=vel;
+		}else{
+			bulletY=rectY-radius;
+			shootFlag=false;
+		}
+	}
+
 	
 	document.addEventListener('keydown', function (e) {
         switch (e.keyCode) {
             case 37:
-                drawL();
+				if(rectX>0)rectX-=vel;
+				draw();
                 break;
             case 39:
-				drawR();
+				if(rectX<800-rectWidth)rectX+=vel;
+				draw();
                 break;
 			case 32:
-                setInterval(bullet,interval);
+				shootFlag=true;
+				setInterval(bulletLogic,10);
                 break;
         }
     });
 	
-	function drawL(x)
-	{	
-		if(changex>boundaryL){
-			ctx.clearRect(0,549, 800,600);
-			ctx.beginPath();
-			changex -= 5;
-			rectX = (canvasWidth/2)-halfRect+ changex;
-			rectY =canvasHeight-rectSize;
-			ctx.rect(rectX,rectY,rectSize,rectSize);
-			ctx.fillStyle="red";
-			ctx.fill();
-			ctx.stroke();			
-			ctx.closePath();
-		}else {
-            return;
-        }
-	}
-
-	function drawR(x)
-	{	
-		if(changex<boundaryR){
-			ctx.clearRect(0,549, 800,600);
-			ctx.beginPath();
-			changex += 5;
-			rectX = (canvasWidth/2)-halfRect+ changex;
-			rectY =canvasHeight-rectSize;
-			ctx.rect(rectX,rectY,rectSize,rectSize);
-			ctx.fillStyle="red";
-			ctx.fill();
-			ctx.stroke();			
-			ctx.closePath();
-		}else {
-            return;
-        }
-	}
-
-	function bullet()
-	{
-		bulletX=(canvasWidth/2)+changex;
-		bulletY=canvasHeight-rectSize-radius-1-changey;
-		ctx.clearRect(bulletX-radius-1,bulletY-radius,bulletX+radius,bulletY+radius);
-		ctx.beginPath();
-		ctx.arc(bulletX,bulletY,radius,0,Math.PI*2,true);
-		ctx.fillStyle="red";
-		ctx.fill();
-		changey+=2;
-		ctx.stroke();			
-		ctx.closePath();
-		if(changey > 600) return;
-	}
+	
 	</script>
 </html>

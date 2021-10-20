@@ -12,22 +12,19 @@
 	var rectWidth = 50;
 	var rectHeight = 30;
 
-	
 	var rectX = (c.width-rectWidth)/2;
 	var rectY = c.height-rectHeight;
 	
 	var radius = 10;
 	var bulletX = rectX+(rectWidth/2);
 	var bulletY = rectY-radius;
-	var vel =8;
+	var vel =15;
 	
 	var shootFlag=false;
 	var targetR;
 	var targetX;
 	var targetY;
 	var distance;
-	var dx;
-	var dy;
 	var counter = 0;
 	
 	
@@ -41,7 +38,7 @@
 	
 	function drawBullet(){
 		ctx.beginPath();
-		ctx.arc(rectX+(rectWidth/2),bulletY,radius,0,Math.PI*2,true);
+		ctx.arc(bulletX,bulletY,radius,0,Math.PI*2,true);
 		ctx.fillStyle="red";
 		ctx.fill();
 		ctx.closePath();
@@ -49,6 +46,7 @@
 	
 	function draw(){
 			ctx.clearRect(0,0, 800,600);
+			bulletX = rectX+(rectWidth/2);
 			drawTarget();
 			drawRect();
 	}
@@ -90,15 +88,15 @@
 	}
 	
 	function collision(){
-		dx = (targetX+targetR)-(bulletX+radius);
-		dy = (targetY+targetR)-(bulletY+radius)
-		distance = Math.sqrt(dx*dx + dy*dy);
+		distance = parseInt( Math.sqrt(((targetX - bulletX) * (targetX - bulletX)) + ((targetY - bulletY) *(targetY - bulletY))));
 		if (distance<radius+targetR){
 			ctx.clearRect(0,0,800,200);
 			counter+=1;
 			generateTarget();
+			console.log(counter);
 			return true;
 		}else {
+			console.log(counter);
 			return false;
 		}
 	}
@@ -115,7 +113,7 @@
                 break;
 			case 32:
 				shootFlag=true;
-				t = setInterval(bulletLogic,10);
+				t = setInterval(bulletLogic,7);
                 break;
         }
     });

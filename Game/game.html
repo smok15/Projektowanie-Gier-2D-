@@ -16,7 +16,7 @@
 	var rectX = (c.width-rectWidth)/2;
 	var rectY = c.height-rectHeight;
 	
-	var radius = 7;
+	var radius = 10;
 	var bulletX = rectX+(rectWidth/2);
 	var bulletY = rectY-radius;
 	var vel =8;
@@ -26,6 +26,8 @@
 	var targetX;
 	var targetY;
 	var distance;
+	var dx;
+	var dy;
 	var counter = 0;
 	
 	
@@ -52,7 +54,7 @@
 	}
 	
 	function bulletLogic(){
-		if(bulletY>0 && shootFlag && collision()){
+		if(bulletY>0 && shootFlag && collision()==false){
 			ctx.clearRect(0,0, 800,600);
 			drawRect();
 			drawTarget();
@@ -61,6 +63,7 @@
 		}else{
 			bulletY=rectY-radius;
 			shootFlag=false;
+			drawTarget();
 			clearInterval(t);
 		}
 	}
@@ -81,20 +84,23 @@
 	function drawTarget(){
 		ctx.beginPath();
 		ctx.arc(targetX,targetY,targetR,0,Math.PI*2,true);
-		ctx.fillStyle="red";
+		ctx.fillStyle="blue";
 		ctx.fill();
 		ctx.closePath();
 	}
 	
 	function collision(){
-		distance = Math.hypot(bulletX - targetX, bulletY - targetY);
-		if ((distance - targetR - radius )<1){
-			ctx.clearRect(0,0,800,150);
-			generateTarget();
-			distance = 0;
+		dx = (targetX+targetR)-(bulletX+radius);
+		dy = (targetY+targetR)-(bulletY+radius)
+		distance = Math.sqrt(dx*dx + dy*dy);
+		if (distance<radius+targetR){
+			ctx.clearRect(0,0,800,200);
 			counter+=1;
+			generateTarget();
 			return true;
-		}else return false;
+		}else {
+			return false;
+		}
 	}
 	
 	document.addEventListener('keydown', function (e) {
@@ -113,6 +119,7 @@
                 break;
         }
     });
+
 	generateTarget();
 	draw();
 	</script>

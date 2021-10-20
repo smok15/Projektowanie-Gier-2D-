@@ -6,52 +6,128 @@
 	</body>
 	
 	<script>
-	var circle= myCanvas.getContext('2d');
-	var colorFlag=true;
-	var colorChange=0;
-	var interval =10;
-	var canvasWidth= 800;
-	var canvasHeight= 600;
-	var radius = 100;
-	var GradientA = (canvasWidth/2)-75 - 2*radius;
-	var GradientB = (canvasWidth/2)+75 - 2*radius;
-	var bounceFlag = true;
-	var bounceChange = 0;
+	var c = document.getElementById("myCanvas");
+	var ctx= c.getContext('2d');
 	
-	//drawing cirle
-	function draw()
-	{
-		var grd = circle.createLinearGradient(GradientA+colorChange, canvasHeight/2, GradientB+colorChange, canvasHeight/2);
-		grd.addColorStop(0, "#203dc3");
-		grd.addColorStop(1, "#6dc128");
-		
-		circle.clearRect(0,0, 800,600);
-		circle.beginPath();
-		circle.arc(canvasWidth/2,200+bounceChange,radius,0,Math.PI*2,true);
-		circle.closePath();
-		circle.fillStyle=grd;
-		circle.fill();
-		
-		tone();
-		bounce();
-		
-	}
-	//color change
-	function tone(){
-		if(colorChange==400)colorFlag=false;
-		if(colorChange==0)colorFlag=true;
-		if(colorFlag==true)colorChange+=4;
-		else colorChange-=4;
-	}
-	//bounce
-	function bounce(){
-		if(bounceChange==300)bounceFlag=false;
-		if(bounceChange==0)bounceFlag=true;
-		if(bounceFlag==true)bounceChange+=3;
-		else bounceChange-=3;
-	}
-	draw();
-	setInterval(draw,interval);
+	var rectWidth = 60;
+	var rectHeight = 20;
 
+	var rectX = (c.width-rectWidth)/2;
+	var rectY = c.height-rectHeight;
+	
+	var radius = 10;
+	var bulletX = rectX+(rectWidth/2);
+	var bulletY = rectY-radius;
+	var vel =15;
+	
+	var shootFlag=false;
+	var targetR;
+	var targetX;
+	var targetY;
+	var distance;
+	var counter = 0;
+	
+	
+	function drawRect(){
+		ctx.beginPath();
+		ctx.rect(rectX,rectY,rectWidth,rectHeight);
+		ctx.fillStyle="black";
+		ctx.fill();
+		ctx.closePath();
+	}
+	
+	function drawBullet(){
+		ctx.beginPath();
+		ctx.arc(bulletX,bulletY,radius,0,Math.PI*2,true);
+		ctx.fillStyle="red";
+		ctx.fill();
+		ctx.closePath();
+	}
+	
+	function draw(){
+			ctx.clearRect(0,0, 800,600);
+			bulletX = rectX+(rectWidth/2);
+			drawScore();
+			drawTarget();
+			drawRect();
+	}
+	
+	function bulletLogic(){
+		if (bulletY == 0){
+			window.alert("KONIEC GRY!\nTwój wynik to: "+counter+"\nOdśwież stronę aby zacząć nową grę!");
+		}else if(bulletY>0 && shootFlag && collision()==false){
+			ctx.clearRect(0,0, 800,600);
+			drawScore();
+			drawRect();
+			drawTarget();
+			drawBullet();
+			bulletY-=vel;
+		}else{
+			bulletY=rectY-radius;
+			shootFlag=false;
+			drawTarget();
+			clearInterval(t);
+		}
+	}
+
+	function rand(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min)) + min;
+	}
+	
+	function generateTarget()
+	{
+		targetR = rand(20,50);
+		targetX = rand(targetR,c.width-targetR);
+		targetY = rand(targetR,150);
+	}
+
+	function drawTarget(){
+		ctx.beginPath();
+		ctx.arc(targetX,targetY,targetR,0,Math.PI*2,true);
+		ctx.fillStyle="blue";
+		ctx.fill();
+		ctx.closePath();
+	}
+	
+	function collision(){
+		distance = parseInt( Math.sqrt(((targetX - bulletX) * (targetX - bulletX)) + ((targetY - bulletY) *(targetY - bulletY))));
+		if (distance<radius+targetR){
+			ctx.clearRect(0,0,800,200);
+			counter+=1;
+			generateTarget();
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	function drawScore() {
+    ctx.font = "24px Arial";
+    ctx.fillStyle = "black";
+    ctx.fillText("Wynik: " + counter, 20, c.height - 40);
+	}
+
+	document.addEventListener('keydown', function (e) {
+        switch (e.keyCode) {
+            case 37:
+				if(rectX>0)rectX-=vel;
+				draw();
+                break;
+            case 39:
+				if(rectX<800-rectWidth)rectX+=vel;
+				draw();
+                break;
+			case 32:
+				shootFlag=true;
+				t = setInterval(bulletLogic,7);
+                break;
+        }
+    });
+
+	window.alert("STEROWANIE\nStrzałki: lewo, prawo\nStrzał: SPACJA\nStrzał oddajemy po ustawieniu prostokątu na pozycji.");
+	generateTarget();
+	draw();
 	</script>
 </html>

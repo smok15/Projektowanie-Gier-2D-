@@ -25,6 +25,8 @@
 	var targetR;
 	var targetX;
 	var targetY;
+	var distance;
+	var counter = 0;
 	
 	
 	function drawRect(){
@@ -50,7 +52,7 @@
 	}
 	
 	function bulletLogic(){
-		if(bulletY>0 && shootFlag){
+		if(bulletY>0 && shootFlag && collision()){
 			ctx.clearRect(0,0, 800,600);
 			drawRect();
 			drawTarget();
@@ -84,6 +86,16 @@
 		ctx.closePath();
 	}
 	
+	function collision(){
+		distance = Math.hypot(bulletX - targetX, bulletY - targetY);
+		if ((distance - targetR - radius )<1){
+			ctx.clearRect(0,0,800,150);
+			generateTarget();
+			distance = 0;
+			counter+=1;
+			return true;
+		}else return false;
+	}
 	
 	document.addEventListener('keydown', function (e) {
         switch (e.keyCode) {

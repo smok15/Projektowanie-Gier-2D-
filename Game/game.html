@@ -16,14 +16,15 @@
 	var rectX = (c.width-rectWidth)/2;
 	var rectY = c.height-rectHeight;
 	
-	var radius = 10;
+	var radius = 7;
 	var bulletX = rectX+(rectWidth/2);
 	var bulletY = rectY-radius;
 	var vel =8;
 	
-	var leftFlag=false;
-	var rightFlag=false;
 	var shootFlag=false;
+	var targetR;
+	var targetX;
+	var targetY;
 	
 	
 	function drawRect(){
@@ -56,9 +57,27 @@
 		}else{
 			bulletY=rectY-radius;
 			shootFlag=false;
+			clearInterval(t);
 		}
 	}
 
+	function rand(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min)) + min;
+	}
+	
+	function drawTarget(){
+		targetR = rand(20,50);
+		targetX = rand(targetR,ctx.width-targetR);
+		targetY = rand(targetR,150);
+		ctx.beginPath();
+		ctx.arc(targetX,targetY,targetR,0,Math.PI*2,true);
+		ctx.fillStyle="red";
+		ctx.fill();
+		ctx.closePath();
+	}
+	
 	
 	document.addEventListener('keydown', function (e) {
         switch (e.keyCode) {
@@ -72,11 +91,12 @@
                 break;
 			case 32:
 				shootFlag=true;
-				setInterval(bulletLogic,10);
+				t = setInterval(bulletLogic,10);
                 break;
         }
     });
 	
-	
+	draw();
+	x = setInterval(drawTarget(),50);
 	</script>
 </html>

@@ -45,6 +45,7 @@
 	
 	function draw(){
 			ctx.clearRect(0,0, 800,600);
+			drawTarget();
 			drawRect();
 	}
 	
@@ -52,6 +53,7 @@
 		if(bulletY>0 && shootFlag){
 			ctx.clearRect(0,0, 800,600);
 			drawRect();
+			drawTarget();
 			drawBullet();
 			bulletY-=vel;
 		}else{
@@ -67,10 +69,14 @@
 		return Math.floor(Math.random() * (max - min)) + min;
 	}
 	
-	function drawTarget(){
+	function generateTarget()
+	{
 		targetR = rand(20,50);
-		targetX = rand(targetR,ctx.width-targetR);
+		targetX = rand(targetR,c.width-targetR);
 		targetY = rand(targetR,150);
+	}
+
+	function drawTarget(){
 		ctx.beginPath();
 		ctx.arc(targetX,targetY,targetR,0,Math.PI*2,true);
 		ctx.fillStyle="red";
@@ -95,8 +101,7 @@
                 break;
         }
     });
-	
+	generateTarget();
 	draw();
-	x = setInterval(drawTarget(),50);
 	</script>
 </html>

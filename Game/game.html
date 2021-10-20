@@ -53,7 +53,9 @@
 	}
 	
 	function bulletLogic(){
-		if(bulletY>0 && shootFlag && collision()==false){
+		if (bulletY == 0){
+			window.alert("KONIEC GRY!\nTwój wynik to: "+counter+"\nOdśwież stronę aby zacząć nową grę!");
+		}else if(bulletY>0 && shootFlag && collision()==false){
 			ctx.clearRect(0,0, 800,600);
 			drawScore();
 			drawRect();
@@ -92,7 +94,7 @@
 	function collision(){
 		distance = parseInt( Math.sqrt(((targetX - bulletX) * (targetX - bulletX)) + ((targetY - bulletY) *(targetY - bulletY))));
 		if (distance<radius+targetR){
-			ctx.clearRect(0,0,800,300);
+			ctx.clearRect(0,0,800,200);
 			counter+=1;
 			generateTarget();
 			return true;
@@ -124,6 +126,7 @@
         }
     });
 
+	window.alert("STEROWANIE\nStrzałki: lewo, prawo\nStrzał: SPACJA\nStrzał oddajemy po ustawieniu prostokątu na pozycji.");
 	generateTarget();
 	draw();
 	</script>

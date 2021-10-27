@@ -65,6 +65,15 @@
 			ctx.fillStyle = "red";
 			ctx.fill();
 			ctx.closePath();
+			ctx.beginPath();
+			ctx.rect(245, z, 10, 70); ctx.rect(345, z, 10, 70); ctx.rect(445, z, 10, 70); ctx.rect(545, z, 10, 70);
+			ctx.rect(245, z+140, 10, 70); ctx.rect(345, z+140, 10, 70); ctx.rect(445, z+140, 10, 70); ctx.rect(545, z+140, 10, 70);
+			ctx.rect(245, z+280, 10, 70); ctx.rect(345, z+280, 10, 70); ctx.rect(445, z+280, 10, 70); ctx.rect(545, z+280, 10, 70);
+			ctx.rect(245, z+420, 10, 70); ctx.rect(345, z+420, 10, 70); ctx.rect(445, z+420, 10, 70); ctx.rect(545, z+420, 10, 70);
+			ctx.rect(245, z+560, 10, 70); ctx.rect(345, z+560, 10, 70); ctx.rect(445, z+560, 10, 70); ctx.rect(545, z+560, 10, 70);
+			ctx.fillStyle = "white";
+			ctx.fill();
+			ctx.closePath();
 		};
 
 		function animate(){
@@ -86,7 +95,6 @@
 			};
 			drawCar();
 		};
-
 		animate();
 	</script>
 </html>

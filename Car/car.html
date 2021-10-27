@@ -11,18 +11,10 @@
 		var carPositionX = (c.width/2)-25;
 		var carPositionY= (c.height)-80;
 		var carX = 50;
-		var carY = 80; 
+		var carY = 80; var z=-140; var c=0;
 		var velocity =5;
 		var rightPressed = false;
 		var leftPressed = false;
-
-		function drawRectangle() {
-			ctx.beginPath();
-			ctx.rect(carPositionX, carPositionY, carX, carY);
-			ctx.fillStyle = "black";
-			ctx.fill();
-			ctx.closePath();
-		};
 
 		document.addEventListener('keydown', function(e) {
 			e.preventDefault();
@@ -44,17 +36,55 @@
 			}
 		});
 
+		function drawCar() {
+			ctx.beginPath();
+			ctx.rect(carPositionX, carPositionY, carX, carY);
+			ctx.fillStyle = "black";
+			ctx.fill();
+			ctx.closePath();
+		};
+
+		function drawRoad(){
+			ctx.beginPath();
+			ctx.rect(150, 0, 500, 600);
+			ctx.fillStyle = "gray";
+			ctx.fill();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.rect(0, 0, 100, 600);
+			ctx.rect(700, 0, 100, 600);
+			ctx.fillStyle = "green";
+			ctx.fill();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.rect(100, z, 50, 70); ctx.rect(650, z, 50, 70);
+			ctx.rect(100, z+140, 50, 70); ctx.rect(650, z+140, 50, 70);
+			ctx.rect(100, z+280, 50, 70); ctx.rect(650, z+280, 50, 70);
+			ctx.rect(100, z+420, 50, 70); ctx.rect(650, z+420, 50, 70);
+			ctx.rect(100, z+560, 50, 70); ctx.rect(650, z+560, 50, 70);
+			ctx.fillStyle = "red";
+			ctx.fill();
+			ctx.closePath();
+		};
+
 		function animate(){
 			ctx.clearRect(0,0, 800,600);
-
 			window.requestAnimationFrame(animate);
 
-			if (rightPressed) {
+			if (rightPressed && carPositionX<600) {
         		 carPositionX += velocity;
-    		} else if (leftPressed) {
+    		} else if (leftPressed && carPositionX>150) {
         		carPositionX -= velocity;
     		};
-			drawRectangle();
+			z+=5;c+=5;
+
+			drawRoad();
+
+			if (c%140==0){
+				z=-140;
+				drawRoad();
+			};
+			drawCar();
 		};
 
 		animate();

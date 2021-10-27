@@ -11,10 +11,19 @@
 		var carPositionX = (c.width/2)-25;
 		var carPositionY= (c.height)-80;
 		var carX = 50;
-		var carY = 80; var z=-140; var c=0;
+		var carY = 80; 
+		var enemyX= rand(150,600);
+		
+		var z=-140; var c=0; var h=0;
 		var velocity =5;
 		var rightPressed = false;
 		var leftPressed = false;
+
+		function rand(min, max) {
+			min = Math.ceil(min);
+			max = Math.floor(max);
+			return Math.floor(Math.random() * (max - min)) + min;
+		}
 
 		document.addEventListener('keydown', function(e) {
 			e.preventDefault();
@@ -76,6 +85,14 @@
 			ctx.closePath();
 		};
 
+		function spawnEnemy(){
+			ctx.beginPath();
+			ctx.rect(enemyX, 0+h, carX, carY);
+			ctx.fillStyle = "black";
+			ctx.fill();
+			ctx.closePath();
+		}
+
 		function animate(){
 			ctx.clearRect(0,0, 800,600);
 			window.requestAnimationFrame(animate);
@@ -85,7 +102,7 @@
     		} else if (leftPressed && carPositionX>150) {
         		carPositionX -= velocity;
     		};
-			z+=5;c+=5;
+			z+=5;c+=5;h+=5;
 
 			drawRoad();
 
@@ -93,6 +110,7 @@
 				z=-140;
 				drawRoad();
 			};
+			spawnEnemy();
 			drawCar();
 		};
 		animate();

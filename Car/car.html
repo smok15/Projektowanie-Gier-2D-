@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<body>
+	  <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+	  </canvas>
+	</body>
+	
+	<script>
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");
+		var carPositionX = (c.width/2)-25;
+		var carPositionY= (c.height)-80;
+		var carX = 50;
+		var carY = 80; 
+		var velocity =5;
+		var rightPressed = false;
+		var leftPressed = false;
+
+		function drawRectangle() {
+			ctx.beginPath();
+			ctx.rect(carPositionX, carPositionY, carX, carY);
+			ctx.fillStyle = "black";
+			ctx.fill();
+			ctx.closePath();
+		};
+
+		document.addEventListener('keydown', function(e) {
+			e.preventDefault();
+			if (e.keyCode === 39) {
+				rightPressed = true;
+			}
+			if (e.keyCode === 37) {
+				leftPressed = true;
+			}
+		});
+
+		document.addEventListener('keyup', function(e) {
+			e.preventDefault();
+			if (e.keyCode === 39) {
+				rightPressed = false;
+			}
+			if (e.keyCode === 37) {
+				leftPressed = false;
+			}
+		});
+
+		function animate(){
+			ctx.clearRect(0,0, 800,600);
+
+			window.requestAnimationFrame(animate);
+
+			if (rightPressed) {
+        		 carPositionX += velocity;
+    		} else if (leftPressed) {
+        		carPositionX -= velocity;
+    		};
+			drawRectangle();
+		};
+
+		animate();
+	</script>
+</html>

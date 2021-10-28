@@ -52,9 +52,10 @@
 		var carX = 50; var carY = 80; var velocity =5;
 		var rightPressed = false;
 		var leftPressed = false;
-		var counter = 0;
+		var counter = 0; var level =120;
 
 		var enemies = [];
+		var lines = [];
 
 		function rand(min, max) {
 			min = Math.ceil(min);
@@ -100,21 +101,37 @@
 		function animate(){
 			ctx.clearRect(0,0, 800,600);
 			window.requestAnimationFrame(animate);
+
 			counter+=1;
 			if (rightPressed && carPositionX<500) {
         		 carPositionX += velocity;
     		} else if (leftPressed && carPositionX>100) {
         		carPositionX -= velocity;
     		};
+
 			drawRoad();
-			if(counter%120==0){
+			//lines
+			if(counter%20==0){
+				lines.push(new Line(50,-100,50,70,"red",7));
+				lines.push(new Line(550,-100,50,70,"red",7));
+				lines.push(new Line(185,-100,10,70,"white",7));
+				lines.push(new Line(275,-100,10,70,"white",7));
+				lines.push(new Line(365,-100,10,70,"white",7));
+				lines.push(new Line(455,-100,10,70,"white",7));
+			};
+			lines.forEach(function (line, i) {
+				line.drawRectangle();
+				line.update();
+			});
+			//enemies
+			if(counter%level==0){
 				enemies.push(new Enemy(rand(100,500),-100,carX,carY,"Black",3));
 			};
 			enemies.forEach(function (enemy, i) {
 				enemy.drawRectangle();
 				enemy.update();
 			});
-			
+
 			drawRect(carPositionX, carPositionY, carX, carY,"Black");
 		};
 		animate();

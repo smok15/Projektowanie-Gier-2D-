@@ -45,18 +45,38 @@
 			}
 		}
 
+		class Bonus{
+			constructor(x, y, width, height, color, velocity) {
+				this.x = x;
+				this.y = y;
+				this.width = width;
+				this.height = height;
+				this.color = color;
+				this.velocity = velocity;
+			}
+
+			drawRectangle() {
+				drawRect(this.x, this.y, this.width, this.height,this.color);
+			}
+
+			update() {
+				this.y = this.y + this.velocity;
+			}
+		}
+
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
 		var carPositionX = (c.width/2)-100;
 		var carPositionY= (c.height)-100;
-		var carX = 50; var carY = 80; var velocity =5;
+		var carX = 50; var carY = 80; var velocity =9;
 		var rightPressed = false;
 		var leftPressed = false;
 		var counter = 0; var level =180; 
-		var crash=false;
-
+		var crash=false; var bonusScore = 0;
+		let reqAnim;
 		var enemies = [];
 		var lines = [];
+		var bonuses =[];
 
 		function rand(min, max) {
 			min = Math.ceil(min);
@@ -105,9 +125,13 @@
 			ctx.fillText(a + z, x, y);
 		}
 
+		function stopAnimation() {
+		window.cancelAnimationFrame(reqAnim);
+		}
+
 		function animate(){
 			ctx.clearRect(0,0, 800,600);
-			window.requestAnimationFrame(animate);
+			reqAnim= window.requestAnimationFrame(animate);
 
 			counter+=1;
 			if (rightPressed && carPositionX<500) {
@@ -131,22 +155,32 @@
 				line.update();
 				if(line.y > c.height + 100) lines.splice(i, 1);
 			});
+			//bonuses
+			if(counter%level==0) bonuses.push(new Bonus(rand(100,500),-100,20,20,"Blue",8));
+			bonuses.forEach(function (bonus, i) {
+				bonus.drawRectangle();
+				bonus.update();
+				if(carPositionX < bonus.x + bonus.width && carPositionX + carX > bonus.x && carPositionY < bonus.y + bonus.height && carY + carPositionY > bonus.y){
+					bonusScore+=50;
+					bonuses.splice(i, 1);
+				};
+				if(bonus.y > c.height + 100) bonuses.splice(i, 1);
+			});
 			//enemies
-			if(counter%level==0){
-				enemies.push(new Enemy(rand(100,500),-100,carX,carY,"Black",3));
-			};
+			if(counter%level==0) enemies.push(new Enemy(rand(100,500),-100,carX,carY,"Black",3));
 			enemies.forEach(function (enemy, i) {
 				enemy.drawRectangle();
 				enemy.update();
 				if(carPositionX < enemy.x + enemy.width && carPositionX + carX > enemy.x && carPositionY < enemy.y + enemy.height && carY + carPositionY > enemy.y){
-					crash=true;
+					stopAnimation();
+					window.alert("Przegrałeś!\nTwój wynik to: " + (counter+bonusScore) + "\nOdśwież stronę aby zacząć od nowa.");
 				};
 				if(enemy.y > c.height + 100) enemies.splice(i, 1);
 			});
 
 			drawRect(carPositionX, carPositionY, carX, carY,"Black");
-			drawScore(655,50,counter,"Wynik: ");
-			drawScore(655,100,crash,"Dzwon: ");
+			drawScore(655,c.height/2,counter,"Wynik: ");
+			drawScore(655,(c.height/2)+30,bonusScore,"Bonus: ");
 
 		};
 	animate();

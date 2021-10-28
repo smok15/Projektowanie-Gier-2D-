@@ -87,7 +87,7 @@
 
 		function spawnEnemy(){
 			ctx.beginPath();
-			ctx.rect(enemyX, 0+h, carX, carY);
+			ctx.rect(enemyX, -80+h, carX, carY);
 			ctx.fillStyle = "black";
 			ctx.fill();
 			ctx.closePath();
@@ -105,12 +105,14 @@
 			z+=5;c+=5;h+=5;
 
 			drawRoad();
-
 			if (c%140==0){
 				z=-140;
 				drawRoad();
 			};
 			spawnEnemy();
+			if (h%160==0){
+				spawnEnemy();
+			};
 			drawCar();
 		};
 		animate();

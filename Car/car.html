@@ -72,7 +72,7 @@
 		var rightPressed = false;
 		var leftPressed = false;
 		var counter = 0; var level =180; 
-		var crash=false; var bonusScore = 0;
+		var crash=false; var bonusScore = 0; var turnFlag=false;
 		let reqAnim;
 		var enemies = [];
 		var lines = [];
@@ -113,10 +113,9 @@
 		};
 
 		function drawRoad(){
-			drawRect(100, 0, 450, 600,"gray");
-			drawRect(0, 0, 50, 600,"green");
-			drawRect(600, 0, 50, 600,"green");
-			drawRect(650, 0, 150, 600,"black");
+			drawRect(100, -400, 450, 1400,"gray");
+			drawRect(-200, -400, 250, 1400,"green");
+			drawRect(600, -400, 250, 1400,"green");
 		};
 
 		function drawScore(x,y,z,a) {
@@ -139,6 +138,20 @@
     		} else if (leftPressed && carPositionX>100) {
         		carPositionX -= velocity;
     		};
+
+			ctx.save();
+			if(counter>200 && counter<400){
+				ctx.translate(-150+c.width/2,c.height/2);
+				ctx.rotate(10 * Math.PI / 180);
+				ctx.translate(150-c.width/2,-c.height/2);
+				turnFlag=true;
+			};
+			if(counter>600 && counter<1000){
+				ctx.translate(-150+c.width/2,c.height/2);
+				ctx.rotate(-(10 * Math.PI / 180));
+				ctx.translate(150-c.width/2,-c.height/2);
+				turnFlag=true;
+			};
 
 			drawRoad();
 			//lines
@@ -177,8 +190,11 @@
 				};
 				if(enemy.y > c.height + 100) enemies.splice(i, 1);
 			});
-
 			drawRect(carPositionX, carPositionY, carX, carY,"Black");
+
+			ctx.stroke();
+			ctx.restore();
+			drawRect(650, -400, 350, 1400,"black");
 			drawScore(655,c.height/2,counter,"Wynik: ");
 			drawScore(655,(c.height/2)+30,bonusScore,"Bonus: ");
 

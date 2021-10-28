@@ -52,7 +52,8 @@
 		var carX = 50; var carY = 80; var velocity =5;
 		var rightPressed = false;
 		var leftPressed = false;
-		var counter = 0; var level =120;
+		var counter = 0; var level =180; 
+		var crash=false;
 
 		var enemies = [];
 		var lines = [];
@@ -98,6 +99,12 @@
 			drawRect(650, 0, 150, 600,"black");
 		};
 
+		function drawScore(x,y,z,a) {
+			ctx.font = "24px Arial";
+			ctx.fillStyle = "White";
+			ctx.fillText(a + z, x, y);
+		}
+
 		function animate(){
 			ctx.clearRect(0,0, 800,600);
 			window.requestAnimationFrame(animate);
@@ -122,6 +129,7 @@
 			lines.forEach(function (line, i) {
 				line.drawRectangle();
 				line.update();
+				if(line.y > c.height + 100) lines.splice(i, 1);
 			});
 			//enemies
 			if(counter%level==0){
@@ -130,10 +138,18 @@
 			enemies.forEach(function (enemy, i) {
 				enemy.drawRectangle();
 				enemy.update();
+				if(carPositionX < enemy.x + enemy.width && carPositionX + carX > enemy.x && carPositionY < enemy.y + enemy.height && carY + carPositionY > enemy.y){
+					crash=true;
+				};
+				if(enemy.y > c.height + 100) enemies.splice(i, 1);
 			});
 
 			drawRect(carPositionX, carPositionY, carX, carY,"Black");
+			drawScore(655,50,counter,"Wynik: ");
+			drawScore(655,100,crash,"Dzwon: ");
+
 		};
-		animate();
+	animate();
+
 	</script>
 </html>

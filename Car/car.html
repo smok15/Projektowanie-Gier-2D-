@@ -17,13 +17,9 @@
 				this.velocity = velocity;
 			}
 
-			drawRectangle() {
-				drawRect(this.x, this.y, this.width, this.height,this.color);
-			}
+			drawRectangle() {drawRect(this.x, this.y, this.width, this.height,this.color);}
 
-			update() {
-				this.y = this.y + this.velocity;
-			}
+			update() {this.y = this.y + this.velocity;}
 		}
 
 		class Line{
@@ -36,13 +32,9 @@
 				this.velocity = velocity;
 			}
 
-			drawRectangle() {
-				drawRect(this.x, this.y, this.width, this.height,this.color);
-			}
+			drawRectangle() {	drawRect(this.x, this.y, this.width, this.height,this.color);}
 
-			update() {
-				this.y = this.y + this.velocity;
-			}
+			update() {	this.y = this.y + this.velocity;}
 		}
 
 		class Bonus{
@@ -55,53 +47,39 @@
 				this.velocity = velocity;
 			}
 
-			drawRectangle() {
-				drawRect(this.x, this.y, this.width, this.height,this.color);
-			}
+			drawRectangle() {	drawRect(this.x, this.y, this.width, this.height,this.color);}
 
-			update() {
-				this.y = this.y + this.velocity;
-			}
+			update() {	this.y = this.y + this.velocity;}
 		}
 
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
-		var carPositionX = (c.width/2)-100;
-		var carPositionY= (c.height)-100;
-		var carX = 50; var carY = 80; var velocity =9;
-		var rightPressed = false;
-		var leftPressed = false;
-		var counter = 0; var level =180; 
-		var crash=false; var bonusScore = 0; var turnFlag=false;
+
+		var carPositionX = (c.width/2)-100, carPositionY= (c.height)-130,
+		carX = 50, carY = 80, velocity =9,
+		rightPressed = false, leftPressed = false,
+		counter = 0, level =120, enemyV=7,
+		bonusScore = 0, z=0,
+		enemies = [],
+		lines = [],
+		bonuses =[];
 		let reqAnim;
-		var enemies = [];
-		var lines = [];
-		var bonuses =[];
 
 		function rand(min, max) {
-			min = Math.ceil(min);
-			max = Math.floor(max);
+			min = Math.ceil(min); max = Math.floor(max);
 			return Math.floor(Math.random() * (max - min)) + min;
 		}
 
 		document.addEventListener('keydown', function(e) {
 			e.preventDefault();
-			if (e.keyCode === 39) {
-				rightPressed = true;
-			}
-			if (e.keyCode === 37) {
-				leftPressed = true;
-			}
+			if (e.keyCode === 39) rightPressed = true;
+			if (e.keyCode === 37) leftPressed = true;
 		});
 
 		document.addEventListener('keyup', function(e) {
 			e.preventDefault();
-			if (e.keyCode === 39) {
-				rightPressed = false;
-			}
-			if (e.keyCode === 37) {
-				leftPressed = false;
-			}
+			if (e.keyCode === 39) rightPressed = false;
+			if (e.keyCode === 37) leftPressed = false;
 		});
 
 		function drawRect(a,b,c,d,e) {
@@ -124,15 +102,14 @@
 			ctx.fillText(a + z, x, y);
 		}
 
-		function stopAnimation() {
-		window.cancelAnimationFrame(reqAnim);
-		}
+		function stopAnimation() {window.cancelAnimationFrame(reqAnim);}
 
 		function animate(){
 			ctx.clearRect(0,0, 800,600);
 			reqAnim= window.requestAnimationFrame(animate);
 
 			counter+=1;
+			//movement
 			if (rightPressed && carPositionX<500) {
         		 carPositionX += velocity;
     		} else if (leftPressed && carPositionX>100) {
@@ -140,17 +117,16 @@
     		};
 
 			ctx.save();
-			if(counter>200 && counter<400){
+			//turns
+			if(z==1){
 				ctx.translate(-150+c.width/2,c.height/2);
 				ctx.rotate(10 * Math.PI / 180);
 				ctx.translate(150-c.width/2,-c.height/2);
-				turnFlag=true;
 			};
-			if(counter>600 && counter<1000){
+			if(z==2){
 				ctx.translate(-150+c.width/2,c.height/2);
 				ctx.rotate(-(10 * Math.PI / 180));
 				ctx.translate(150-c.width/2,-c.height/2);
-				turnFlag=true;
 			};
 
 			drawRoad();
@@ -169,7 +145,7 @@
 				if(line.y > c.height + 100) lines.splice(i, 1);
 			});
 			//bonuses
-			if(counter%level==0) bonuses.push(new Bonus(rand(100,500),-100,20,20,"Blue",8));
+			if(counter%level==0) bonuses.push(new Bonus(rand(100,500),-100,20,20,"Blue",enemyV));
 			bonuses.forEach(function (bonus, i) {
 				bonus.drawRectangle();
 				bonus.update();
@@ -180,7 +156,7 @@
 				if(bonus.y > c.height + 100) bonuses.splice(i, 1);
 			});
 			//enemies
-			if(counter%level==0) enemies.push(new Enemy(rand(100,500),-100,carX,carY,"Black",3));
+			if(counter%level==0) enemies.push(new Enemy(rand(100,500),-100,carX,carY,"Black",enemyV));
 			enemies.forEach(function (enemy, i) {
 				enemy.drawRectangle();
 				enemy.update();
@@ -190,14 +166,20 @@
 				};
 				if(enemy.y > c.height + 100) enemies.splice(i, 1);
 			});
+			
 			drawRect(carPositionX, carPositionY, carX, carY,"Black");
-
 			ctx.stroke();
 			ctx.restore();
+
+			//score
 			drawRect(650, -400, 350, 1400,"black");
 			drawScore(655,c.height/2,counter,"Wynik: ");
 			drawScore(655,(c.height/2)+30,bonusScore,"Bonus: ");
-
+			//turns
+			if(counter%300==0)enemyV+=2;
+			if(counter%400==0)z=1;
+			if(counter%800==0)z=0;
+			if(counter%900==0)z=2;
 		};
 	animate();
 

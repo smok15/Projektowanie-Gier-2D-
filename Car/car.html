@@ -6,18 +6,55 @@
 	</body>
 	
 	<script>
+
+		class Enemy{
+			constructor(x, y, width, height, color, velocity) {
+				this.x = x;
+				this.y = y;
+				this.width = width;
+				this.height = height;
+				this.color = color;
+				this.velocity = velocity;
+			}
+
+			drawRectangle() {
+				drawRect(this.x, this.y, this.width, this.height,this.color);
+			}
+
+			update() {
+				this.y = this.y + this.velocity;
+			}
+		}
+
+		class Line{
+			constructor(x, y, width, height, color, velocity) {
+				this.x = x;
+				this.y = y;
+				this.width = width;
+				this.height = height;
+				this.color = color;
+				this.velocity = velocity;
+			}
+
+			drawRectangle() {
+				drawRect(this.x, this.y, this.width, this.height,this.color);
+			}
+
+			update() {
+				this.y = this.y + this.velocity;
+			}
+		}
+
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
-		var carPositionX = (c.width/2)-25;
-		var carPositionY= (c.height)-80;
-		var carX = 50;
-		var carY = 80; 
-		var enemyX= rand(150,600);
-		
-		var z=-140; var c=0; var h=0;
-		var velocity =5;
+		var carPositionX = (c.width/2)-100;
+		var carPositionY= (c.height)-100;
+		var carX = 50; var carY = 80; var velocity =5;
 		var rightPressed = false;
 		var leftPressed = false;
+		var counter = 0;
+
+		var enemies = [];
 
 		function rand(min, max) {
 			min = Math.ceil(min);
@@ -45,75 +82,40 @@
 			}
 		});
 
-		function drawCar() {
+		function drawRect(a,b,c,d,e) {
 			ctx.beginPath();
-			ctx.rect(carPositionX, carPositionY, carX, carY);
-			ctx.fillStyle = "black";
+			ctx.rect(a,b,c,d);
+			ctx.fillStyle = e;
 			ctx.fill();
 			ctx.closePath();
 		};
 
 		function drawRoad(){
-			ctx.beginPath();
-			ctx.rect(150, 0, 500, 600);
-			ctx.fillStyle = "gray";
-			ctx.fill();
-			ctx.closePath();
-			ctx.beginPath();
-			ctx.rect(0, 0, 100, 600);
-			ctx.rect(700, 0, 100, 600);
-			ctx.fillStyle = "green";
-			ctx.fill();
-			ctx.closePath();
-			ctx.beginPath();
-			ctx.rect(100, z, 50, 70); ctx.rect(650, z, 50, 70);
-			ctx.rect(100, z+140, 50, 70); ctx.rect(650, z+140, 50, 70);
-			ctx.rect(100, z+280, 50, 70); ctx.rect(650, z+280, 50, 70);
-			ctx.rect(100, z+420, 50, 70); ctx.rect(650, z+420, 50, 70);
-			ctx.rect(100, z+560, 50, 70); ctx.rect(650, z+560, 50, 70);
-			ctx.fillStyle = "red";
-			ctx.fill();
-			ctx.closePath();
-			ctx.beginPath();
-			ctx.rect(245, z, 10, 70); ctx.rect(345, z, 10, 70); ctx.rect(445, z, 10, 70); ctx.rect(545, z, 10, 70);
-			ctx.rect(245, z+140, 10, 70); ctx.rect(345, z+140, 10, 70); ctx.rect(445, z+140, 10, 70); ctx.rect(545, z+140, 10, 70);
-			ctx.rect(245, z+280, 10, 70); ctx.rect(345, z+280, 10, 70); ctx.rect(445, z+280, 10, 70); ctx.rect(545, z+280, 10, 70);
-			ctx.rect(245, z+420, 10, 70); ctx.rect(345, z+420, 10, 70); ctx.rect(445, z+420, 10, 70); ctx.rect(545, z+420, 10, 70);
-			ctx.rect(245, z+560, 10, 70); ctx.rect(345, z+560, 10, 70); ctx.rect(445, z+560, 10, 70); ctx.rect(545, z+560, 10, 70);
-			ctx.fillStyle = "white";
-			ctx.fill();
-			ctx.closePath();
+			drawRect(100, 0, 450, 600,"gray");
+			drawRect(0, 0, 50, 600,"green");
+			drawRect(600, 0, 50, 600,"green");
+			drawRect(650, 0, 150, 600,"black");
 		};
-
-		function spawnEnemy(){
-			ctx.beginPath();
-			ctx.rect(enemyX, -80+h, carX, carY);
-			ctx.fillStyle = "black";
-			ctx.fill();
-			ctx.closePath();
-		}
 
 		function animate(){
 			ctx.clearRect(0,0, 800,600);
 			window.requestAnimationFrame(animate);
-
-			if (rightPressed && carPositionX<600) {
+			counter+=1;
+			if (rightPressed && carPositionX<500) {
         		 carPositionX += velocity;
-    		} else if (leftPressed && carPositionX>150) {
+    		} else if (leftPressed && carPositionX>100) {
         		carPositionX -= velocity;
     		};
-			z+=5;c+=5;h+=5;
-
 			drawRoad();
-			if (c%140==0){
-				z=-140;
-				drawRoad();
+			if(counter%120==0){
+				enemies.push(new Enemy(rand(100,500),-100,carX,carY,"Black",3));
 			};
-			spawnEnemy();
-			if (h%160==0){
-				spawnEnemy();
-			};
-			drawCar();
+			enemies.forEach(function (enemy, i) {
+				enemy.drawRectangle();
+				enemy.update();
+			});
+			
+			drawRect(carPositionX, carPositionY, carX, carY,"Black");
 		};
 		animate();
 	</script>

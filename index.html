@@ -1,37 +1,209 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            .centrujacy{
-                width: 308px;
-                height: 308px;
-                margin-top: auto;
-                margin-left: auto;
-                margin-right: auto;
-                margin-bottom: auto;
-            }
+	<body>
+	  <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+	  </canvas>
+	</body>
+	
+	<script>
 
-            .centrujacy div{position:relative;float:left;float:top;border: 2px solid black;
-                width:100px;height: 100px; text-align: center; font-size: 80px; color:white;
-            }
-            .centrujacy div:hover{color:black}
-            #a,#b,#c{border-top: 0px}
-            #g,#h,#i{border-bottom: 0px}
-            #a,#d,#g{border-left: 0px}
-            #c,#f,#i{border-right: 0px}
-        </style>
-    </head>
-    <body>
-        <div class="centrujacy">
-            <div id="a"> X </div>
-            <div id="b"> X </div>
-            <div id="c"> X </div>
-            <div id="d"> X </div>
-            <div id="e"> X </div>
-            <div id="f"> X </div>
-            <div id="g"> X </div>
-            <div id="h"> X </div>
-            <div id="i"> X </div>
-        </div>
-    </body>
+		class Enemy{
+			constructor(x, y, width, height, color, velocity) {
+				this.x = x;
+				this.y = y;
+				this.width = width;
+				this.height = height;
+				this.color = color;
+				this.velocity = velocity;
+			}
+
+			drawRectangle() {drawRect(this.x, this.y, this.width, this.height,this.color);}
+
+
+			update() {this.y = this.y + this.velocity;}
+		}
+
+		class Line{
+			constructor(x, y, width, height, color, velocity) {
+				this.x = x;
+				this.y = y;
+				this.width = width;
+				this.height = height;
+				this.color = color;
+				this.velocity = velocity;
+			}
+
+			drawRectangle() {	drawRect(this.x, this.y, this.width, this.height,this.color);}
+
+			update() {	this.y = this.y + this.velocity;}
+		}
+
+		class Bonus{
+			constructor(x, y, width, height, color, velocity) {
+				this.x = x;
+				this.y = y;
+				this.width = width;
+				this.height = height;
+				this.color = color;
+				this.velocity = velocity;
+			}
+
+			drawRectangle() {	drawRect(this.x, this.y, this.width, this.height,this.color);}
+
+			update() {	this.y = this.y + this.velocity;}
+		}
+
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");
+
+		var carPositionX = (c.width/2)-100, carPositionY= (c.height)-130,
+		w1X = carPositionX, w1Y=carPositionY+15,w2X = carPositionX, w2Y=carPositionY+65,wR=10,
+		carX = 50, carY = 80, velocity =9,
+		rightPressed = false, leftPressed = false,
+		counter = 0, level =120, enemyV=7,
+		bonusScore = 0, z=0,
+		enemies = [],
+		lines = [],
+		bonuses =[];
+		let reqAnim;
+
+		function rand(min, max) {
+			min = Math.ceil(min); max = Math.floor(max);
+			return Math.floor(Math.random() * (max - min)) + min;
+		}
+
+		document.addEventListener('keydown', function(e) {
+			e.preventDefault();
+			if (e.keyCode === 39) rightPressed = true;
+			if (e.keyCode === 37) leftPressed = true;
+		});
+
+		document.addEventListener('keyup', function(e) {
+			e.preventDefault();
+			if (e.keyCode === 39) rightPressed = false;
+			if (e.keyCode === 37) leftPressed = false;
+		});
+
+		function drawRect(a,b,c,d,e) {
+			ctx.beginPath();
+			ctx.rect(a,b,c,d);
+			ctx.fillStyle = e;
+			ctx.fill();
+			ctx.closePath();
+		};
+
+		function drawArc(a,b,c){
+			ctx.beginPath()
+			ctx.arc(a,b,wR,0,Math.PI*2,true);
+			ctx.fillStyle = c;
+			ctx.fill();
+			ctx.closePath();
+		}
+		
+		function drawRoad(){
+			drawRect(100, -400, 450, 1400,"gray");
+			drawRect(-200, -400, 250, 1400,"green");
+			drawRect(600, -400, 250, 1400,"green");
+		};
+
+		function drawScore(x,y,z,a) {
+			ctx.font = "24px Arial";
+			ctx.fillStyle = "White";
+			ctx.fillText(a + z, x, y);
+		}
+
+		function drawCar(a,b,c,d,e){
+			drawRect(a, b, c, d,e);
+			drawArc(a,b+15,e);
+			drawArc(a,b+65,e);
+			drawArc(a+c,b+15,e);
+			drawArc(a+c,b+65,e);
+		}
+		
+		function stopAnimation() {window.cancelAnimationFrame(reqAnim);}
+
+		function animate(){
+			ctx.clearRect(0,0, 800,600);
+			reqAnim= window.requestAnimationFrame(animate);
+
+			counter+=1;
+			//movement
+			if (rightPressed && carPositionX<500) {
+        		 carPositionX += velocity;
+    		} else if (leftPressed && carPositionX>100) {
+        		carPositionX -= velocity;
+    		};
+
+			ctx.save();
+			//turns
+			if(z==1){
+				ctx.translate(-150+c.width/2,c.height/2);
+				ctx.rotate(5 * Math.PI / 180);
+				ctx.translate(150-c.width/2,-c.height/2);
+			};
+			if(z==2){
+				ctx.translate(-150+c.width/2,c.height/2);
+				ctx.rotate(-(5 * Math.PI / 180));
+				ctx.translate(150-c.width/2,-c.height/2);
+			};
+
+			drawRoad();
+			//lines
+			if(counter%20==0){
+				lines.push(new Line(50,-100,50,70,"red",7));
+				lines.push(new Line(550,-100,50,70,"red",7));
+				lines.push(new Line(185,-100,10,70,"white",7));
+				lines.push(new Line(275,-100,10,70,"white",7));
+				lines.push(new Line(365,-100,10,70,"white",7));
+				lines.push(new Line(455,-100,10,70,"white",7));
+			};
+			lines.forEach(function (line, i) {
+				line.drawRectangle();
+				line.update();
+				if(line.y > c.height + 100) lines.splice(i, 1);
+			});
+			//bonuses
+			if(counter%level==0) bonuses.push(new Bonus(rand(100,500),-100,20,20,"green",enemyV));
+			bonuses.forEach(function (bonus, i) {
+				bonus.drawRectangle();
+				bonus.update();
+				if(carPositionX < bonus.x + bonus.width && carPositionX + carX > bonus.x && carPositionY < bonus.y + bonus.height && carY + carPositionY > bonus.y){
+					bonusScore+=50;
+					bonuses.splice(i, 1);
+				};
+				if(bonus.y > c.height + 100) bonuses.splice(i, 1);
+			});
+			//enemies
+			if(counter%level==0) enemies.push(new Enemy(rand(100,500),-100,50,50,"red",enemyV));
+			enemies.forEach(function (enemy, i) {
+				enemy.drawRectangle();
+				enemy.update();
+				if(carPositionX < enemy.x + enemy.width && carPositionX + carX > enemy.x && carPositionY < enemy.y + enemy.height && carY + carPositionY > enemy.y){
+					stopAnimation();
+					window.alert("Przegrałeś!\nTwój wynik to: " + bonusScore + "\nOdśwież stronę aby zacząć od nowa.");
+				};
+				if(enemy.y > c.height + 100) enemies.splice(i, 1);
+			});
+			
+			drawCar(carPositionX, carPositionY, carX, carY,"Black");
+			ctx.stroke();
+			ctx.restore();
+
+			//score
+			drawRect(650, -400, 350, 1400,"black");
+			drawScore(655,(c.height/2),bonusScore,"Wynik: ");
+			
+			//turns
+			if(counter%300==0){
+			enemyV+=1;
+			velocity+=1;
+			level-=10;
+			}
+			if(counter%400==0)z=1;
+			if(counter%800==0)z=0;
+			if(counter%900==0)z=2;
+		};
+	animate();
+
+	</script>
 </html>
